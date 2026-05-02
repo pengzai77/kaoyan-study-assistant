@@ -2,6 +2,7 @@
 .gradle/
 .kotlin/
 build/
+app/build/
 **/build/
 .externalNativeBuild/
 .cxx/
