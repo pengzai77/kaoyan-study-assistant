@@ -1,8 +1,8 @@
 # 考研学习助手
 
-考研学习助手是一款面向考研学生的个人学习管理 Android App。项目尝试解决备考过程中学习记录分散、复盘效率低、学习状态难以量化的问题，通过学习计时、科目管理、历史记录、每日复盘、目标设置和 AI 学习总结，帮助用户形成更稳定的学习反馈闭环。
+考研学习助手是一款面向考研学生的 Android 学习管理 App。项目用于解决备考过程中学习记录分散、复盘效率低、学习状态难以量化的问题，通过学习计时、科目管理、历史记录、每日复盘、目标设置和 AI 学习总结，帮助用户更清晰地跟踪自己的学习状态。
 
-本项目目前以个人学习场景为主，功能设计偏向本地可用、数据清晰和配置透明。
+项目目前以个人学习场景为主，功能设计偏向本地可用、数据清晰和配置透明。
 
 ## 核心功能
 
@@ -15,43 +15,89 @@
 - AI 学习总结：基于学习记录和复盘内容生成结构化总结。
 - 本地规则总结兜底：未配置 API Key 或接口不可用时，仍可使用本地规则生成基础总结。
 - OpenAI-compatible 接口配置：支持配置兼容 OpenAI Chat Completions 风格的模型服务地址、模型名和 API Key。
+- 数据本地存储：学习记录、复盘内容和应用设置默认保存在本地设备。
 
 ## 技术栈
 
 - Kotlin
-- Jetpack Compose + Material 3
-- MVVM + Repository
+- Jetpack Compose
+- Material 3
+- MVVM
+- Repository
 - Room
 - DataStore Preferences
 - Hilt
 - Retrofit + OkHttp
 - Kotlin Coroutines + Flow
-- Gradle 8.7
+- Gradle
 
-## 项目信息
+## 项目结构
 
-- 包名：`com.kaoyan.studyassistant`
-- 最低系统：Android 8.0，API 26
-- `compileSdk`：35
-- `targetSdk`：35
-- Java / Kotlin JVM：17
-- 当前版本：`1.0`
+```text
+.
+├── app/                              # Android 应用模块
+│   ├── src/main/java/com/kaoyan/studyassistant/
+│   │   ├── data/                     # 本地数据、远程接口、Repository
+│   │   ├── di/                       # Hilt 依赖注入模块
+│   │   ├── domain/                   # 学习总结等领域逻辑
+│   │   ├── service/                  # 学习计时前台服务
+│   │   ├── ui/                       # Compose 页面、导航、主题
+│   │   └── util/                     # 通用工具
+│   └── src/main/res/                 # 资源文件
+├── docs/                             # 构建、发布、安全说明
+├── screenshots/                      # 真实运行截图目录
+├── gradle/                           # Gradle Wrapper 配置
+├── build.gradle.kts                  # 根项目 Gradle 配置
+├── settings.gradle.kts               # Gradle 模块配置
+└── libs.versions.toml                # 依赖版本目录
+```
 
-## AI / Agent 辅助开发流程
+## 本地构建
 
-本项目在开发过程中使用 AI / Agent 辅助完成了需求拆解、代码结构分析、Jetpack Compose 页面优化、Bug 定位、构建错误排查、智能总结模块设计和 README 文档整理。
+请先安装：
 
-典型使用场景包括：
+- JDK 17
+- Android Studio
+- Android SDK，包含项目所需的 Android API 35
 
-- 根据考研学习管理需求拆解 App 功能模块。
-- 辅助设计学习计时、学习记录、每日复盘、学习统计等核心页面。
-- 分析计时、状态保存、AI 总结触发逻辑等问题。
-- 设计“本地规则总结 + 大模型增强”的智能总结流程。
-- 辅助整理构建说明、项目文档和后续路线图。
+Windows：
 
-AI / Agent 主要承担需求分析、代码修改建议、调试思路生成和文档整理工作；人工负责最终代码审核、运行测试、功能取舍和发布前检查。
+```powershell
+.\gradlew.bat assembleDebug
+```
 
-更多说明见 [docs/AI_AGENT_WORKFLOW.md](docs/AI_AGENT_WORKFLOW.md)。
+Linux / macOS：
+
+```bash
+./gradlew assembleDebug
+```
+
+Debug APK 输出路径：
+
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+不建议将 APK 直接提交到仓库。如需分发测试安装包，建议通过 GitHub Releases 发布。
+
+更多构建说明见 [docs/BUILD.md](docs/BUILD.md)。
+
+## 配置说明
+
+- API Key 不应硬编码到项目代码中。
+- `local.properties` 只用于本地环境配置，不应提交到仓库。
+- 第三方模型服务地址、模型名和 API Key 需要由用户自行配置。
+- 项目不提供默认第三方服务 Key。
+- 使用第三方模型服务前，请自行确认对应服务的隐私政策和计费规则。
+
+## 隐私与安全
+
+- 用户学习数据默认存储在本地设备。
+- API Key、签名文件、`local.properties`、`.env` 不应提交到仓库。
+- 发布 APK 前应检查安装包和仓库中是否包含敏感信息。
+- APK、AAB、签名证书和本地构建缓存不应直接提交到代码仓库。
+
+更多说明见 [docs/PRIVACY_AND_SECURITY.md](docs/PRIVACY_AND_SECURITY.md)。
 
 ## 项目截图
 
@@ -67,33 +113,6 @@ AI / Agent 主要承担需求分析、代码修改建议、调试思路生成和
 
 请使用真实设备或模拟器截图，不要上传包含 API Key、手机号、邮箱等敏感信息的图片。
 
-## 本地构建
-
-请先安装：
-
-- JDK 17
-- Android SDK，包含项目所需的 Android API 35
-
-在项目根目录执行：
-
-```powershell
-.\gradlew.bat assembleDebug
-```
-
-Debug APK 输出位置：
-
-```text
-app\build\outputs\apk\debug\app-debug.apk
-```
-
-Release 包可执行：
-
-```powershell
-.\gradlew.bat assembleRelease
-```
-
-Release APK / AAB 不建议直接提交到代码仓库。如需发布安装包，建议通过 GitHub Releases 上传构建产物。
-
 ## Roadmap
 
 - 完善 AI 对话功能。
@@ -104,19 +123,11 @@ Release APK / AAB 不建议直接提交到代码仓库。如需发布安装包�
 - 适配平板端布局。
 - 优化番茄钟后台计时稳定性。
 
-## 隐私与安全
-
-- API Key 不应硬编码进项目代码。
-- `local.properties`、`.env`、签名文件不应提交到 GitHub。
-- 用户学习数据默认存储在本地设备。
-- 若使用第三方模型接口，应由用户自行配置服务地址和 Key，并自行确认对应服务的隐私政策和计费规则。
-- APK、AAB、签名证书和本地构建缓存不应直接提交到代码仓库。
-
 ## 文档
 
-- [AI / Agent 辅助开发流程](docs/AI_AGENT_WORKFLOW.md)
-- [提交材料建议](docs/SUBMISSION_MATERIALS.md)
+- [构建说明](docs/BUILD.md)
 - [发布检查清单](docs/RELEASE_CHECKLIST.md)
+- [隐私与安全](docs/PRIVACY_AND_SECURITY.md)
 - [更新日志](CHANGELOG.md)
 
 ## 许可证
